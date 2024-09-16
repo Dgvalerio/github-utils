@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 import type { Metadata, NextPage } from 'next';
 import localFont from 'next/font/local';
 
-import '@/app/globals.css';
+import '@/styles/globals.css';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -23,7 +23,9 @@ export const metadata: Metadata = {
 
 const RootLayout: NextPage<PropsWithChildren> = ({ children }) => (
   <html lang="pt-br">
-    <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+    >
       {children}
     </body>
   </html>
