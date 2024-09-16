@@ -1,32 +1,42 @@
 import { PropsWithChildren } from 'react';
 
 import type { Metadata, NextPage } from 'next';
-import localFont from 'next/font/local';
+import { Inter } from 'next/font/google';
+
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
+import { SessionProvider } from '@/components/session-provider/session-provider';
+import { ThemeProvider } from '@/components/theme-provider/theme-provider';
+import { SonnerToaster } from '@/lib/sonner/sonner';
+import { cn } from '@/lib/tailwind/utils';
 
 import '@/styles/globals.css';
+import 'material-symbols/rounded.css';
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-});
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'Github Utils',
-  description: 'Github Utils',
+  title: 'GitHub Utils',
+  description: 'GitHub Utils',
 };
 
 const RootLayout: NextPage<PropsWithChildren> = ({ children }) => (
   <html lang="pt-br">
     <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+      className={cn(inter.className, `flex min-h-screen flex-col antialiased`)}
     >
-      {children}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <SessionProvider>{children}</SessionProvider>
+        <SonnerToaster />
+      </ThemeProvider>
+      <Analytics />
+      <SpeedInsights />
     </body>
   </html>
 );
