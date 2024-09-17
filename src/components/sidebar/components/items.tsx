@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useMemo } from 'react';
+import { ComponentProps, FC, PropsWithChildren, useMemo } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -24,7 +24,7 @@ interface ItemsProps {
     onClick?: () => void;
     disabled?: boolean;
   }[];
-  className?: HTMLDivElement['className'];
+  className?: ComponentProps<'div'>['className'];
 }
 
 const linkVariants = cva('w-full', {

@@ -8,8 +8,6 @@ import { SideBar } from '@/components/sidebar/sidebar';
 import { ResizableHandle, ResizablePanel } from '@/components/ui/resizable';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-const defaultLayout = [20, 32, 48];
-
 interface PrivateLayoutProps extends PropsWithChildren {}
 
 const PrivateLayout: NextPage<PrivateLayoutProps> = ({ children }) => (
@@ -17,7 +15,7 @@ const PrivateLayout: NextPage<PrivateLayoutProps> = ({ children }) => (
     <ResizableProvider>
       <SideBar />
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
+      <ResizablePanel defaultSize={76} minSize={64}>
         <div className="flex flex-1 flex-col">
           <Header />
           <main className="flex w-full max-w-4xl flex-1 flex-col gap-4 p-4">

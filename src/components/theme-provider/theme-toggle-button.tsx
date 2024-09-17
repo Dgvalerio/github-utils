@@ -1,5 +1,5 @@
 'use client';
-import { FC } from 'react';
+import { ComponentProps, FC } from 'react';
 
 import { useTheme } from 'next-themes';
 
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 
 export const ThemeToggleButton: FC<{
-  className?: HTMLDivElement['className'];
+  className?: ComponentProps<'div'>['className'];
 }> = ({ className }) => {
   const { setTheme, theme } = useTheme();
 
