@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 import { LifeBuoy, LogOut, User } from 'lucide-react';
 
-const getAvatarFallback = (name: string): string =>
+export const getAvatarFallback = (name: string): string =>
   name
     .split(' ')
     .map((letter) => letter[0])

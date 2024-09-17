@@ -3,16 +3,30 @@ import { PropsWithChildren } from 'react';
 import { NextPage } from 'next';
 
 import { Header } from '@/components/header/header';
+import { ResizableProvider } from '@/components/resizable-provider/resizable-provider';
+import { SideBar } from '@/components/sidebar/sidebar';
+import { ResizableHandle, ResizablePanel } from '@/components/ui/resizable';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
+const defaultLayout = [20, 32, 48];
 
 interface PrivateLayoutProps extends PropsWithChildren {}
 
 const PrivateLayout: NextPage<PrivateLayoutProps> = ({ children }) => (
-  <>
-    <Header />
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-4 p-4">
-      {children}
-    </main>
-  </>
+  <TooltipProvider delayDuration={0}>
+    <ResizableProvider>
+      <SideBar />
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
+        <div className="flex flex-1 flex-col">
+          <Header />
+          <main className="flex w-full max-w-4xl flex-1 flex-col gap-4 p-4">
+            {children}
+          </main>
+        </div>
+      </ResizablePanel>
+    </ResizableProvider>
+  </TooltipProvider>
 );
 
 export default PrivateLayout;
