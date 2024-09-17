@@ -33,7 +33,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^4.0.0",
-    "jotai": "^2.9.3",
     "lucide-react": "^0.441.0",
     "material-symbols": "^0.23.0",
     "next": "14.2.11",
