@@ -22,6 +22,7 @@ interface ItemsProps {
     icon: LucideIcon;
     link?: string;
     onClick?: () => void;
+    disabled?: boolean;
   }[];
   className?: HTMLDivElement['className'];
 }
@@ -57,21 +58,36 @@ const ButtonWrapper: FC<
     isCollapsed: boolean;
     link?: ItemsProps['links'][number]['link'];
     onClick?: ItemsProps['links'][number]['onClick'];
+    disabled?: ItemsProps['links'][number]['disabled'];
   } & PropsWithChildren
-> = ({ active, isCollapsed, link, onClick, children }) => (
+> = ({ active, isCollapsed, link, onClick, children, disabled }) => (
   <Button
     variant={active ? 'default' : 'ghost'}
     size={isCollapsed ? 'icon' : 'sm'}
     className={linkVariants({ isCollapsed, active })}
     onClick={onClick}
-    asChild={!onClick}
+    asChild={!onClick && !disabled}
+    disabled={disabled}
   >
-    {onClick ? children : <Link href={link ?? '#'}>{children}</Link>}
+    {onClick || disabled ? (
+      children
+    ) : (
+      <Link href={link ?? '#'}>{children}</Link>
+    )}
   </Button>
 );
 const Item: FC<
   ItemsProps['links'][number] & { isCollapsed: boolean; pathname: string }
-> = ({ link, onClick, title, label, icon: Icon, pathname, isCollapsed }) => {
+> = ({
+  link,
+  onClick,
+  title,
+  label,
+  icon: Icon,
+  pathname,
+  isCollapsed,
+  disabled,
+}) => {
   const active = useMemo(() => pathname === link, [link, pathname]);
 
   return (
@@ -82,6 +98,7 @@ const Item: FC<
           isCollapsed={isCollapsed}
           link={link}
           onClick={onClick}
+          disabled={!!disabled}
         >
           <Icon className={cn('h-4 w-4', !isCollapsed && 'mr-2')} />
           <span className={isCollapsed ? 'sr-only' : ''}>{title}</span>

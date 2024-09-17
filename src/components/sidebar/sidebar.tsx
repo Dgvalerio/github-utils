@@ -54,7 +54,12 @@ export const SideBar: FC = () => {
             icon: GitPullRequest,
             link: routes.pullRequests,
           },
-          { title: 'Configurações', icon: Wrench, link: routes.configurations },
+          {
+            title: 'Configurações',
+            icon: Wrench,
+            link: routes.configurations,
+            disabled: true,
+          },
         ]}
       />
       <Separator />
