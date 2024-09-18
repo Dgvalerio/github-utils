@@ -3,7 +3,7 @@ import { ComponentProps, FC, PropsWithChildren, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -53,7 +53,7 @@ const linkVariants = cva('w-full', {
   ],
 });
 
-const ButtonWrapper: FC<
+const TriggerWrapper: FC<
   {
     active: boolean;
     isCollapsed: boolean;
@@ -62,10 +62,14 @@ const ButtonWrapper: FC<
     disabled?: SideBarItemsProps['links'][number]['disabled'];
   } & PropsWithChildren
 > = ({ active, isCollapsed, link, onClick, children, disabled }) => (
-  <Button
-    variant={active ? 'default' : 'ghost'}
-    size={isCollapsed ? 'icon' : 'sm'}
-    className={linkVariants({ isCollapsed, active })}
+  <TooltipTrigger
+    className={cn(
+      buttonVariants({
+        variant: active ? 'default' : 'ghost',
+        size: isCollapsed ? 'icon' : 'sm',
+      }),
+      linkVariants({ isCollapsed, active })
+    )}
     onClick={onClick}
     asChild={!onClick && !disabled}
     disabled={disabled}
@@ -75,8 +79,9 @@ const ButtonWrapper: FC<
     ) : (
       <Link href={link ?? '#'}>{children}</Link>
     )}
-  </Button>
+  </TooltipTrigger>
 );
+
 const Item: FC<
   SideBarItemsProps['links'][number] & {
     isCollapsed: boolean;
@@ -96,28 +101,26 @@ const Item: FC<
 
   return (
     <Tooltip delayDuration={0}>
-      <TooltipTrigger className="w-full">
-        <ButtonWrapper
-          active={active}
-          isCollapsed={isCollapsed}
-          link={link}
-          onClick={onClick}
-          disabled={!!disabled}
-        >
-          <Icon className={cn('h-4 w-4', !isCollapsed && 'mr-2')} />
-          <span className={isCollapsed ? 'sr-only' : ''}>{title}</span>
-          {!isCollapsed && label && (
-            <span
-              className={cn(
-                'ml-auto',
-                active && 'text-background dark:text-white'
-              )}
-            >
-              {label}
-            </span>
-          )}
-        </ButtonWrapper>
-      </TooltipTrigger>
+      <TriggerWrapper
+        active={active}
+        isCollapsed={isCollapsed}
+        link={link}
+        onClick={onClick}
+        disabled={!!disabled}
+      >
+        <Icon className={cn('h-4 w-4', !isCollapsed && 'mr-2')} />
+        <span className={isCollapsed ? 'sr-only' : ''}>{title}</span>
+        {!isCollapsed && label && (
+          <span
+            className={cn(
+              'ml-auto',
+              active && 'text-background dark:text-white'
+            )}
+          >
+            {label}
+          </span>
+        )}
+      </TriggerWrapper>
       <TooltipContent
         side="right"
         className={cn('flex items-center gap-4', !isCollapsed && 'hidden')}
