@@ -128,7 +128,7 @@ const PullRequestsView: FC = () => {
           pullRequests.length > 0 &&
           pullRequests.map((pull) => (
             <div
-              key={pull.title}
+              key={pull.title + pull.user + pull.createdAt}
               className="flex flex-col gap-2 rounded border p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">

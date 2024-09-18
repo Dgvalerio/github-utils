@@ -24,7 +24,10 @@ export const metadata: Metadata = {
 const RootLayout: NextPage<PropsWithChildren> = ({ children }) => (
   <html lang="pt-br">
     <body
-      className={cn(inter.className, `flex min-h-screen flex-col antialiased`)}
+      className={cn(
+        inter.className,
+        `flex h-full max-h-screen flex-col antialiased`
+      )}
     >
       <ThemeProvider
         attribute="class"

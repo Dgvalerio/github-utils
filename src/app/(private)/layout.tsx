@@ -18,7 +18,7 @@ const PrivateLayout: NextPage<PrivateLayoutProps> = ({ children }) => (
       <ResizablePanel defaultSize={76} minSize={64}>
         <div className="flex flex-1 flex-col">
           <Header />
-          <main className="flex w-full flex-1 flex-col gap-4 p-4">
+          <main className="flex max-h-[calc(100vh-53px)] w-full flex-1 flex-col gap-4 overflow-auto p-4">
             {children}
           </main>
         </div>
