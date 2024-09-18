@@ -3,24 +3,25 @@ import { FC } from 'react';
 import { NextPage } from 'next';
 import Link from 'next/link';
 
-import { Icon, IconProps } from '@/components/icon/icon';
 import { Button } from '@/components/ui/button';
+import { routes } from '@/utils/constants/routes';
 import { awaiter } from '@/utils/functions/awaiter';
 
+import { GitPullRequest, LucideIcon } from 'lucide-react';
 import type { UrlObject } from 'url';
 
 const Item: FC<{
-  icon: IconProps['icon'];
+  Icon: LucideIcon;
   link: string | UrlObject;
   title: string;
-}> = ({ icon, link, title }) => (
+}> = ({ Icon, link, title }) => (
   <Button
     className="flex h-32 w-32 flex-col items-center gap-1 text-wrap"
     variant="outline"
     asChild
   >
     <Link href={link}>
-      <Icon icon={icon} size={48} />
+      <Icon size={48} />
       <span className="text-center font-medium">{title}</span>
     </Link>
   </Button>
@@ -34,8 +35,8 @@ const HomePage: NextPage = async () => {
       <h1 className="text-lg font-semibold">Bem vindo ao sistema!</h1>
       <div className="flex flex-wrap gap-4">
         <Item
-          icon="alt_route"
-          link="/add-record"
+          Icon={GitPullRequest}
+          link={routes.pullRequests}
           title="Visualizar Pull Requests"
         />
       </div>

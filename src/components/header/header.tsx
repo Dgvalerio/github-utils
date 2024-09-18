@@ -1,5 +1,5 @@
 'use client';
-import { FC, useMemo } from 'react';
+import { FC, Fragment, useMemo } from 'react';
 
 import { usePathname } from 'next/navigation';
 
@@ -31,8 +31,8 @@ export const Header: FC = () => {
         <BreadcrumbList className="gap-1 sm:gap-1">
           <BreadcrumbSeparator />
           {url.map((item, index) => (
-            <>
-              <BreadcrumbItem key={index} className="capitalize">
+            <Fragment key={index + item}>
+              <BreadcrumbItem className="capitalize">
                 {url.length - 1 === index ? (
                   <BreadcrumbPage>{item}</BreadcrumbPage>
                 ) : (
@@ -40,7 +40,7 @@ export const Header: FC = () => {
                 )}
               </BreadcrumbItem>
               {url.length - 1 > index && <BreadcrumbSeparator />}
-            </>
+            </Fragment>
           ))}
         </BreadcrumbList>
       </Breadcrumb>

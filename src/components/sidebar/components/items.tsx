@@ -14,7 +14,7 @@ import { cn } from '@/lib/tailwind/utils';
 import { cva } from 'class-variance-authority';
 import { LucideIcon } from 'lucide-react';
 
-interface ItemsProps {
+export interface SideBarItemsProps {
   isCollapsed: boolean;
   links: {
     title: string;
@@ -23,6 +23,7 @@ interface ItemsProps {
     link?: string;
     onClick?: () => void;
     disabled?: boolean;
+    loading?: boolean;
   }[];
   className?: ComponentProps<'div'>['className'];
 }
@@ -56,9 +57,9 @@ const ButtonWrapper: FC<
   {
     active: boolean;
     isCollapsed: boolean;
-    link?: ItemsProps['links'][number]['link'];
-    onClick?: ItemsProps['links'][number]['onClick'];
-    disabled?: ItemsProps['links'][number]['disabled'];
+    link?: SideBarItemsProps['links'][number]['link'];
+    onClick?: SideBarItemsProps['links'][number]['onClick'];
+    disabled?: SideBarItemsProps['links'][number]['disabled'];
   } & PropsWithChildren
 > = ({ active, isCollapsed, link, onClick, children, disabled }) => (
   <Button
@@ -77,7 +78,10 @@ const ButtonWrapper: FC<
   </Button>
 );
 const Item: FC<
-  ItemsProps['links'][number] & { isCollapsed: boolean; pathname: string }
+  SideBarItemsProps['links'][number] & {
+    isCollapsed: boolean;
+    pathname: string;
+  }
 > = ({
   link,
   onClick,
@@ -127,7 +131,7 @@ const Item: FC<
   );
 };
 
-export const SidebarItems: FC<ItemsProps> = ({
+export const SidebarItems: FC<SideBarItemsProps> = ({
   links,
   isCollapsed,
   className,

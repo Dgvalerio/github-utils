@@ -2,6 +2,7 @@
 
 import { FC, useState } from 'react';
 
+import { FormProps } from '@/components/form/form';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -9,82 +10,87 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/tailwind/utils';
 
-import { CheckIcon, SortAscIcon } from 'lucide-react';
+import { CheckIcon, ChevronDown } from 'lucide-react';
 
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js',
-  },
-  {
-    value: 'remix',
-    label: 'Remix',
-  },
-  {
-    value: 'astro',
-    label: 'Astro',
-  },
-];
+export const Combobox: FC<
+  Pick<
+    FormProps.Combobox<NonNullable<unknown>>,
+    'label' | 'containerClassName' | 'loading' | 'placeholder' | 'items'
+  > & { handleSelect(name: string): void }
+> = ({ containerClassName, loading, placeholder, items, handleSelect }) => {
+  const [value, setValue] = useState<string>();
 
-export const Combobox: FC = () => {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
+  const selectHandler = (name: string): void => {
+    setValue(name);
+    handleSelect(name);
+  };
+
+  if (loading)
+    return (
+      <Skeleton
+        className={cn(
+          'flex h-10 w-full cursor-not-allowed rounded-md',
+          containerClassName
+        )}
+      />
+    );
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
+          className={cn(
+            'justify-between',
+            !value && 'text-muted-foreground',
+            containerClassName
+          )}
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : 'Select framework...'}
-          <SortAscIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            ? items.find((item) => item.value === value)?.label
+            : placeholder}
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent
+        className={cn(
+          'p-0',
+          'w-full min-w-[var(--radix-popover-trigger-width)] max-w-[var(--radix-popover-trigger-width)]'
+        )}
+      >
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
-          <CommandEmpty>No framework found.</CommandEmpty>
-          <CommandGroup>
-            {frameworks.map((framework) => (
-              <CommandItem
-                key={framework.value}
-                value={framework.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? '' : currentValue);
-                  setOpen(false);
-                }}
-              >
-                {framework.label}
-                <CheckIcon
-                  className={cn(
-                    'ml-auto h-4 w-4',
-                    value === framework.value ? 'opacity-100' : 'opacity-0'
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <CommandInput placeholder={placeholder} className="h-9" />
+          <CommandList>
+            <CommandEmpty>Sem itens</CommandEmpty>
+            <CommandGroup>
+              {items.map((item) => (
+                <CommandItem
+                  value={item.label}
+                  key={item.value}
+                  onSelect={selectHandler.bind(null, item.value)}
+                >
+                  {item.label}
+                  <CheckIcon
+                    className={cn(
+                      'ml-auto h-4 w-4',
+                      item.value === value ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
