@@ -17,6 +17,12 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   loadGithubPullRequests,
   loadGithubRepositories,
 } from '@/lib/octokit/load-github';
@@ -93,14 +99,21 @@ const PullRequestsView: FC = () => {
   return (
     <>
       <div className="flex items-stretch gap-2">
-        <Button
-          size="icon"
-          className="h-auto"
-          disabled={loading}
-          onClick={loadPullRequests}
-        >
-          <ReloadIcon className="h-4 w-4" />
-        </Button>
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                className="h-auto"
+                disabled={loading}
+                onClick={loadPullRequests}
+              >
+                <ReloadIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Recarregar pull requests</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <RepositoriesView />
       </div>
       <Separator />
@@ -212,10 +225,17 @@ const RepositoriesSet: FC = () => {
   }, [loadRepositories]);
 
   return (
-    <div className="flex items-center gap-2">
-      <Button onClick={loadRepositories} size="icon" disabled={loading}>
-        <ReloadIcon />
-      </Button>
+    <div className="flex items-stretch gap-2">
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="icon" disabled={loading} onClick={loadRepositories}>
+              <ReloadIcon className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Recarregar pull requests</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <Combobox
         loading={loading}
         placeholder="Repositórios"
