@@ -42,14 +42,14 @@ const RepositoriesView: FC = () => {
 
   if (selectedRepositories.length === 0)
     return (
-      <h2 className="flex flex-wrap gap-2 font-light">
+      <h2 className="flex flex-1 flex-wrap gap-2 font-light">
         <AlertCircle /> Selecione um repositório para visualizar os Pull
         Requests
       </h2>
     );
 
   return (
-    <div className="flex flex-col items-center justify-between gap-2">
+    <div className="flex flex-1 flex-col justify-between gap-2">
       <h2 className="font-bold">Visualizando pull requests de:</h2>
       <div className="flex flex-wrap gap-2">
         {selectedRepositories.map((repository) => (
@@ -98,26 +98,28 @@ const PullRequestsView: FC = () => {
 
   return (
     <>
-      <div className="flex items-stretch gap-2">
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                size="icon"
-                className="h-auto"
-                disabled={loading}
-                onClick={loadPullRequests}
-              >
-                <ReloadIcon className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Recarregar pull requests</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="flex flex-col items-stretch gap-2 md:flex-row">
+        {repositories.length > 0 && (
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  className="ml-auto h-auto min-h-10 md:m-0"
+                  disabled={loading}
+                  onClick={loadPullRequests}
+                >
+                  <ReloadIcon className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Recarregar pull requests</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         <RepositoriesView />
       </div>
       <Separator />
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {loading &&
           [...new Array(6)].map((_, index) => (
             <Skeleton key={index} className="min-h-32 w-full" />
@@ -225,11 +227,16 @@ const RepositoriesSet: FC = () => {
   }, [loadRepositories]);
 
   return (
-    <div className="flex items-stretch gap-2">
+    <div className="flex flex-col items-stretch gap-2 md:flex-row">
       <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button size="icon" disabled={loading} onClick={loadRepositories}>
+            <Button
+              size="icon"
+              disabled={loading}
+              onClick={loadRepositories}
+              className="ml-auto md:m-0"
+            >
               <ReloadIcon className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
