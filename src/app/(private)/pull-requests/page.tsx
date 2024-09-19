@@ -149,7 +149,7 @@ const PullRequestsView: FC = () => {
       <Separator />
       {pullRequests.length > 0 && (
         <>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="font-bold">Usuários:</span>
             {loading &&
               [...new Array(5)].map((_, index) => (
@@ -209,7 +209,7 @@ const PullRequestsView: FC = () => {
                   </div>
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <h1 className="text-2xl font-bold">{pull.title}</h1>
                   <Badge
                     className="h-8 border-green-600 text-base text-green-600"
