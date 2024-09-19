@@ -16,12 +16,10 @@ const PrivateLayout: NextPage<PrivateLayoutProps> = ({ children }) => (
       <SideBar />
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={76} minSize={64}>
-        <div className="flex flex-1 flex-col">
-          <Header />
-          <main className="flex max-h-[calc(100vh-53px)] w-full flex-1 flex-col gap-4 overflow-auto p-4">
-            {children}
-          </main>
-        </div>
+        <Header />
+        <main className="flex max-h-[calc(100vh-53px)] w-full flex-1 flex-col gap-4 overflow-auto p-4">
+          {children}
+        </main>
       </ResizablePanel>
     </ResizableProvider>
   </TooltipProvider>

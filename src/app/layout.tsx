@@ -26,7 +26,7 @@ const RootLayout: NextPage<PropsWithChildren> = ({ children }) => (
     <body
       className={cn(
         inter.className,
-        `flex h-full max-h-screen flex-col antialiased`
+        `flex h-full max-h-screen min-h-screen flex-col items-stretch justify-stretch antialiased`
       )}
     >
       <ThemeProvider
