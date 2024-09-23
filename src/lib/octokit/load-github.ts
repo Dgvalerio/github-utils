@@ -2,15 +2,47 @@ import { GitHub } from '@/types/github';
 
 import { Octokit } from 'octokit';
 
+export const getTotalRepositories = async (token: string): Promise<number> => {
+  const octokit = new Octokit({ auth: token });
+
+  const user = await octokit.rest.users.getAuthenticated();
+
+  if (!user) return 0;
+
+  const response = await octokit.request('GET /user/repos', {
+    per_page: 1,
+    sort: 'pushed',
+  });
+
+  const linkHeader = response.headers.link;
+
+  if (!linkHeader) return response.data.length;
+
+  const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
+
+  if (!lastPageMatch) return response.data.length;
+
+  return parseInt(lastPageMatch[1], 10);
+};
+
 export const loadGithubRepositories = async (
-  token: string
+  token: string,
+  onProgress: (progress: number) => void
 ): Promise<GitHub.Repositories> => {
   try {
+    onProgress(0);
+
     const octokit = new Octokit({ auth: token });
 
     const user = await octokit.rest.users.getAuthenticated();
 
-    if (!user) return [];
+    if (!user) {
+      onProgress(100);
+
+      return [];
+    }
+
+    const totalRepositories = await getTotalRepositories(token);
 
     const get = async (): Promise<GitHub.Repositories> => {
       let aux: GitHub.Repositories = [];
@@ -21,6 +53,8 @@ export const loadGithubRepositories = async (
           sort: 'pushed',
           page,
         });
+
+        onProgress((page / totalRepositories) * 100);
 
         aux = aux.concat(response.data);
 
@@ -96,26 +130,30 @@ export const countGithubOpenedPullRequests = async (
 
     if (!user) return 0;
 
-    const pullsPromise: Promise<GitHub.PullRequests>[] = repositories.map(
-      async (repositoryFullName): Promise<GitHub.PullRequests> => {
+    const pullCountPromise: Promise<number>[] = repositories.map(
+      async (repositoryFullName): Promise<number> => {
         const [owner, repo] = repositoryFullName.split('/');
 
-        const pulls = await octokit.request('GET /repos/{owner}/{repo}/pulls', {
-          owner,
-          repo,
-          state: 'open',
-        });
+        const response = await octokit.request(
+          'GET /repos/{owner}/{repo}/pulls',
+          { per_page: 1, owner, repo, state: 'open' }
+        );
 
-        return pulls.data;
+        const linkHeader = response.headers.link;
+
+        if (!linkHeader) return response.data.length;
+
+        const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
+
+        if (!lastPageMatch) return response.data.length;
+
+        return parseInt(lastPageMatch[1], 10);
       }
     );
 
-    const pulls: GitHub.PullRequests[] = await Promise.all(pullsPromise);
+    const counts: number[] = await Promise.all(pullCountPromise);
 
-    return pulls.reduce(
-      (previousValue, current) => previousValue + current.length,
-      0
-    );
+    return counts.reduce((previousValue, current) => previousValue + current);
   } catch (e) {
     return 0;
   }

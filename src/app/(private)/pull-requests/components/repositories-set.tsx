@@ -9,13 +9,17 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { usePullRequestsStore } from '@/app/(private)/pull-requests/pull-requests.store';
 import { Combobox } from '@/components/combobox/combobox';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { loadGithubRepositories } from '@/lib/octokit/load-github';
+import {
+  getTotalRepositories,
+  loadGithubRepositories,
+} from '@/lib/octokit/load-github';
 import { cn } from '@/lib/tailwind/utils';
 import { View } from '@/types/view';
 import { githubToView } from '@/utils/mappers/github-to-view';
@@ -30,13 +34,21 @@ export const PullRequestsRepositoriesSet: FC = () => {
   const [repositories, setRepositories] = useState<View.Repository[]>([]);
   const [repository, setRepository] = useState<string>();
   const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState<number>(0);
 
   const loadRepositories = useCallback(async (): Promise<void> => {
     setLoading(true);
     try {
       if (!data) return setRepositories([]);
 
-      const repos = await loadGithubRepositories(data.token);
+      const count = await getTotalRepositories(data.token);
+
+      setTotal(count);
+
+      const repos = await loadGithubRepositories(
+        data.token,
+        (progress: number) => console.log({ progress })
+      );
 
       setRepositories(githubToView.repositories(repos));
     } catch (e) {
@@ -75,16 +87,23 @@ export const PullRequestsRepositoriesSet: FC = () => {
           <TooltipContent>Recarregar pull requests</TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <Combobox
-        loading={loading}
-        placeholder="Repositórios"
-        containerClassName="flex-1 w-full"
-        handleSelect={setRepository}
-        items={repositories.map((repository) => ({
-          value: repository.fullName,
-          label: repository.fullName,
-        }))}
-      />
+      {loading ? (
+        <Skeleton className="flex h-10 w-full flex-1 cursor-progress items-center justify-center rounded-md">
+          Carregando {total > 0 ? total + ' ' : ''}repositório
+          {total !== 1 ? 's' : ''}...
+        </Skeleton>
+      ) : (
+        <Combobox
+          loading={loading}
+          placeholder="Repositórios"
+          containerClassName="flex-1 w-full"
+          handleSelect={setRepository}
+          items={repositories.map((repository) => ({
+            value: repository.fullName,
+            label: repository.fullName,
+          }))}
+        />
+      )}
       <Button
         onClick={handleAddRepository}
         className="gap-2"
