@@ -51,7 +51,7 @@
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
-    "@dgvalerio/eslint-config": "^1.5.9",
+    "@dgvalerio/eslint-config": "^1.6.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

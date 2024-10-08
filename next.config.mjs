@@ -10,5 +10,4 @@ const nextConfig = {
   },
 };
 
-// eslint-disable-next-line no-restricted-syntax
 export default nextConfig;

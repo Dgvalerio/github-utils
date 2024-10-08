@@ -5,5 +5,4 @@ const config = {
   },
 };
 
-// eslint-disable-next-line no-restricted-syntax
 export default config;
